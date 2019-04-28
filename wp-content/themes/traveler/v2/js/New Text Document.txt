@@ -1,0 +1,178 @@
+jQuery(document).ready(function($) {
+    if($('.main-slider.slider').length) {
+        var heightSlider = $('.main-slider.slider').outerHeight();
+        $('.st-bg-slider').fotorama({
+            height: heightSlider
+        });
+    }
+
+    /*Datepicker*/
+    $('.item-search-content .options').click(function () {
+        $(this).find('.wpbooking-check-in-out').trigger('click');
+        $(this).closest('.template-hotel-activity_submit').find('.wpbooking-check-in-out').trigger('click');
+    })
+
+    $('.item-search-content .wpbooking-date-start').change(function () {
+        var parent = $(this).closest('.item-search-content');
+        var day    = parent.find('.checkin_d').val();
+        var month  = parent.find('.checkin_m').val();
+        var year   = parent.find('.checkin_y').val();
+        parent.find('.day span').html(pad(day));
+        parent.find('.month-year span').html(number_to_monteh(pad(month)) +","+year);
+    });
+
+
+    $('.item-search-content .wpbooking-date-end').change(function () {
+        var parent = $(this).closest('.item-search-content');
+        var day    = parent.find('.checkout_d').val();
+        var month  = parent.find('.checkout_m').val();
+        var year   = parent.find('.checkout_y').val();
+        parent.find('.day span').html(pad(day));
+        parent.find('.month-year span').html(number_to_monteh(pad(month)) +","+year);
+    });
+
+
+    function number_to_monteh(number) {
+        switch (number) {
+            case"01":
+                return hotel_alone_params.month_1;
+                break;
+            case"02":
+                return hotel_alone_params.month_2;
+                break;
+            case"03":
+                return hotel_alone_params.month_3;
+                break;
+            case"04":
+                return hotel_alone_params.month_4;
+                break;
+            case"05":
+                return hotel_alone_params.month_5;
+                break;
+            case"06":
+                return hotel_alone_params.month_6;
+                break;
+            case"07":
+                return hotel_alone_params.month_7;
+                break;
+            case"08":
+                return hotel_alone_params.month_8;
+                break;
+            case"09":
+                return hotel_alone_params.month_9;
+                break;
+            case"10":
+                return hotel_alone_params.month_10;
+                break;
+            case"11":
+                return hotel_alone_params.month_11;
+                break;
+            case"12":
+                return hotel_alone_params.month_12;
+                break;
+        }
+    }
+    function pad(d) {
+        d = parseInt(d);
+        return (d < 10) ? '0' + d.toString() : d.toString();
+    }
+
+    $('.st-form-search-room').each(function () {
+        var check_in     = $(this).find('.wpbooking-date-start');
+        var check_out    = $(this).find('.wpbooking-date-end');
+        var check_in_out = $(this).find('.wpbooking-check-in-out');
+        var date_group   = $(this).find('.item-search-content');
+        var customClass  = check_in_out.data('custom-class');
+        var dateToday = new Date();
+        check_in_out.daterangepicker({
+                singleDatePicker: false,
+                autoApply       : true,
+                disabledPast    : true,
+                dateFormat      : hotel_alone_params.dateformat,
+                customClass     : customClass,
+                minDate: dateToday,
+            },
+            function (start, end, label) {
+                $('.checkin_d', date_group).val(start.format('DD'));
+                $('.checkin_m', date_group).val(start.format('MM'));
+                $('.checkin_y', date_group).val(start.format('YYYY'));
+                check_in.val(start.format(hotel_alone_params.dateformat)).trigger('change');
+
+                $('.checkout_d', date_group).val(end.format('DD'));
+                $('.checkout_m', date_group).val(end.format('MM'));
+                $('.checkout_y', date_group).val(end.format('YYYY'));
+                check_out.val(end.format(hotel_alone_params.dateformat)).trigger('change');
+            });
+        check_in.focus(function () {
+            check_in_out.trigger('click');
+        });
+
+        check_out.focus(function () {
+            check_in_out.trigger('click');
+        });
+    });
+    $('.helios_dl_mobile_menu').each(function () {
+        //$(this).dlmenu({});
+        $( this ).dlmenu({
+            animationClasses : { classin : 'dl-animate-in-1', classout : 'dl-animate-out-1' }
+        });
+    });
+
+    $('.header-mobile.sticky').each(function () {
+        var hw            = $(window).height();
+        var height_header = $(this).find('.helios-navbar-header').height();
+        $(this).find('.dl-menu').css('max-height', hw - height_header);
+        $(this).find('.dl-submenu').css('max-height', hw - height_header);
+    });
+});
+
+jQuery(function($){
+    $(document).ready(function(){
+        $('.st-discover-slider').each(function () {
+            $(this).owlCarousel({
+                loop:false,
+                items: 3,
+                margin: 0,
+                responsiveClass:true,
+                navigation: true,
+                responsive:{
+                    0:{
+                        items:1,
+                    },
+                    575:{
+                        items:2,
+                    },
+                    992:{
+                        items:3,
+                    },
+                    1200:{
+                        items:3,
+                    }
+                }
+            });
+        });
+    });
+
+
+
+
+    document.querySelectorAll(".item-search-content  .st-number  .plus").forEach((input) => input.addEventListener("click", calculate_add));
+    document.querySelectorAll(".item-search-content  .st-number  .minus").forEach((input) => input.addEventListener("click", calculate_minus));
+    function calculate_add(){
+        var num_item = $(this).closest('.item-search-content');
+        var num = num_item.find('.st-input-number').val();
+        var value_num = parseInt(num)+1;
+        num_item.find('.st-input-number').val(value_num);
+        num_item.find('strong.num').text(value_num);
+    }
+    function calculate_minus(){
+        var num_item = $(this).closest('.item-search-content');
+        var num = num_item.find('.st-input-number').val();
+        if(parseInt(num)>0){
+            var value_num = parseInt(num)-1;
+            num_item.find('.st-input-number').val(value_num);
+            num_item.find('strong.num').text(value_num);
+        }
+        
+    }
+});
